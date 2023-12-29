@@ -18,6 +18,9 @@ class Product(models.Model):
                                  on_delete=models.PROTECT,
                                  related_name='products')
 
+    def __str__(self):
+        return self.name
+
 
 class Category(models.Model):
     name = models.CharField(max_length=255)
@@ -25,3 +28,6 @@ class Category(models.Model):
                                on_delete=models.PROTECT,
                                null=True, blank=True,
                                related_name='childes')
+
+    def __str__(self):
+        return self.name
