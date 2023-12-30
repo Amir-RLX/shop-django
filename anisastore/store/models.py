@@ -17,6 +17,7 @@ class Product(models.Model):
     category = models.ForeignKey('Category',
                                  on_delete=models.PROTECT,
                                  related_name='products')
+    image = models.ImageField(upload_to='product_image/%Y/%m/%d')
 
     def __str__(self):
         return self.name
