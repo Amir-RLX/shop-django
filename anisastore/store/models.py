@@ -29,6 +29,7 @@ class Product(models.Model):
     price = models.PositiveIntegerField()
     count = models.PositiveIntegerField()
     description = models.TextField()
+    enabled = models.BooleanField(default=True)
     category = models.ForeignKey('Category',
                                  on_delete=models.PROTECT,
                                  related_name='products')

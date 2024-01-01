@@ -23,6 +23,10 @@
                             <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
                         </button>
                     </form>
+                    {% if user.is_authenticated and user.profile.avatar%}
+                        <div class="m-1 avatar" style="background-image: url('{{ user.profile.avatar.url }}')">
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </nav>

@@ -6,7 +6,7 @@ from . import models
 
 class ProductAdmin(admin.ModelAdmin):
     readonly_fields = ('uuid',)
-    list_display = ('name', 'count', 'price', 'category')
+    list_display = ('name', 'count', 'price', 'category','enabled')
     list_filter = ('category',)
     search_fields = ('name',)
 
