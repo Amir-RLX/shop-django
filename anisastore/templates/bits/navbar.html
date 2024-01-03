@@ -23,9 +23,14 @@
                             <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
                         </button>
                     </form>
-                    {% if user.is_authenticated and user.profile.avatar%}
-                        <div class="m-1 avatar" style="background-image: url('{{ user.profile.avatar.url }}')">
+                    {% if user.is_authenticated %}
+                        <a class="btn btn-secondary m-1" href="{% url 'logout' %}">Logout</a>
+                        {% if user.avatar%}
+                        <div class="m-1 avatar" style="background-image: url('{{ user.avatar.url }}')">
                         </div>
+                    {% endif %}
+                    {% else %}
+                        <a class="btn btn-secondary m-1" href="{% url 'login' %}">Login</a>
                     {% endif %}
                 </div>
             </div>

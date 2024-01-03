@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block page_header %}
+{% endblock %}
+{% block page_content %}
+    <form method="post">
+    {% csrf_token %}
+        <table>
+            <tbody>
+            {{ form }}
+            </tbody>
+        </table>
+        <input type="submit" value="Login" class="btn btn-primary">
+    </form>
+    <div style="text-align: center"> Register <a href="{% url 'signup' %}">Here</a> </div>
+{% endblock %}

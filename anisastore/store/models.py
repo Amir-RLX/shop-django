@@ -4,8 +4,10 @@ from django.utils import timezone
 import os
 from django.core.validators import ValidationError
 from django.core.validators import FileExtensionValidator
+# from account.models import User
+from django.contrib.auth import get_user_model
 
-
+User = get_user_model()
 # Create your models here.
 
 def _get_file_name(obj, file):
@@ -59,3 +61,11 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Comment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.PROTECT, related_name='comments')
+    date = models.DateTimeField(auto_now_add=True)
+    body = models.TextField()
+    is_published = models.BooleanField(default=False)
+    product = models.ForeignKey('Product', on_delete=models.CASCADE, related_name='comments')

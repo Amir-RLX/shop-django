@@ -5,7 +5,9 @@ import uuid
 from django.utils import timezone
 from django.core.validators import ValidationError
 from django.core.validators import FileExtensionValidator
-from django.contrib.auth.models import User
+
+
+# from django.contrib.auth.models import User
 
 
 def _get_avatar_path(obj, file):
@@ -15,14 +17,14 @@ def _get_avatar_path(obj, file):
     return os.path.join(path, f'{name}{ext}')
 
 
-def image_dims_validator(image):
+def _image_dims_validator(image):
     if image.height > 100 or image.width > 100:
         raise ValidationError("size must be less than 100*100")
 
 
 # Create your models here.
-class Profile(models.Model):
+class User(AbstractUser):
     avatar = models.ImageField(upload_to=_get_avatar_path, null=True, blank=True,
                                validators=[FileExtensionValidator(['jpg', 'png']),
-                                           image_dims_validator])
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+                                           _image_dims_validator])
+    email = models.EmailField('email address')
