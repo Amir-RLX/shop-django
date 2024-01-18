@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block page_content %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Count</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in obj.items.all %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.price }}</td>
+                    <td>{{ item.count }}</td>
+                    <td>{{ item.total_price }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div style="text-align: center">
+        Total = {{ obj.total }}
+        <form method="post" action="{% url 'store:pay_view' pk=obj.pk %}">
+            {% csrf_token %}
+            <button  class="btn btn-primary">Pay</button>
+        </form>
+    </div>
+{% endblock %}

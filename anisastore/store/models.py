@@ -8,6 +8,8 @@ from django.core.validators import FileExtensionValidator
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
+
+
 # Create your models here.
 
 def _get_file_name(obj, file):
@@ -47,6 +49,9 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
+    def get_published_comments(self):
+        return self.comments.filter(is_published=True)
+
     def save(self, *args, **kwargs):
         ...
         return super().save(*args, **kwargs)
@@ -69,3 +74,40 @@ class Comment(models.Model):
     body = models.TextField()
     is_published = models.BooleanField(default=False)
     product = models.ForeignKey('Product', on_delete=models.CASCADE, related_name='comments')
+
+
+class Invoice(models.Model):
+    class STATES(models.IntegerChoices):
+        PENDING = (1, 'Pending')
+        PAID = (2, 'Paid')
+
+    date = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, on_delete=models.PROTECT,
+                             related_name='invoices')
+    total = models.IntegerField(default=0)
+    state = models.IntegerField(choices=STATES.choices, default=STATES.PENDING)
+
+
+class InvoiceItem(models.Model):
+    invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, related_name='items')
+    product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name='invoice_items')
+    name = models.CharField(max_length=255)
+    price = models.IntegerField()
+    count = models.IntegerField()
+    total = models.IntegerField()
+
+
+class Payment(models.Model):
+    class STATES(models.IntegerChoices):
+        PENDING = (1, 'Pending')
+        PAID = (2, 'Paid')
+        Error = (3, 'Error')
+
+    date = models.DateTimeField(auto_now_add=True)
+    invoice = models.ForeignKey(Invoice, on_delete=models.PROTECT,
+                                related_name='payments')
+    amount = models.IntegerField()
+    refid = models.CharField(max_length=255, null=True, blank=True)
+    state = models.IntegerField(choices=STATES.choices, default=STATES.PENDING)
+    authority = models.CharField(max_length=255, null=True, blank=True)
+    gw_response = models.CharField(max_length=255, null=True, blank=True)

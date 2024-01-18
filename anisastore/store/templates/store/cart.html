@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block page_content %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Count</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cart %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ item.obj.name }}</td>
+                    <td>{{ item.obj.price }}</td>
+                    <td>{{ item.count }}</td>
+                    <td>{{ item.total_price }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div style="text-align: center">
+        <form method="post">
+            {% csrf_token %}
+            <button  class="btn btn-primary">Finalize</button>
+        </form>
+    </div>
+{% endblock %}

@@ -1,39 +1,43 @@
-{%  extends 'base.html' %}
+{% extends 'base.html' %}
 {% block page_title %} Products List {% endblock %}
 {% block page_content %}
     {% for item in object_list %}
-    <div class="col mb-5">
-        <div class="card h-100">
-        <!-- Product image-->
-            <img class="card-img-top" src="{% if item.image %}{{ item.image.url }}{% else %}https://dummyimage.com/450x300/dee2e6/6c757d.jpg{% endif %}" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">{{ item.name}}</h5>
-                                    <!-- Product reviews-->
-                                    <div class="d-flex justify-content-center small text-warning mb-2">
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                    </div>
-                                    <!-- Product price-->
-                                    {{item.price}} Toman
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
-                            </div>
+        <div class="col mb-5">
+            <div class="card h-100">
+                <!-- Product image-->
+                <img class="card-img-top" src="
+                        {% if item.image %}{{ item.image.url }}{% else %}https://dummyimage.com/450x300/dee2e6/6c757d.jpg{% endif %}"
+                     alt="..."/>
+                <!-- Product details-->
+                <div class="card-body p-4">
+                    <div class="text-center">
+                        <!-- Product name-->
+                        <h5 class="fw-bolder">{{ item.name }}</h5>
+                        <!-- Product reviews-->
+                        <div class="d-flex justify-content-center small text-warning mb-2">
+                            <div class="bi-star-fill"></div>
+                            <div class="bi-star-fill"></div>
+                            <div class="bi-star-fill"></div>
+                            <div class="bi-star-fill"></div>
+                            <div class="bi-star-fill"></div>
                         </div>
+                        <!-- Product price-->
+                        {{ item.price }} Toman
                     </div>
+                </div>
+                <!-- Product actions-->
+                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                    <div class="text-center"><a class="btn btn-outline-dark mt-auto cart-add-btn"
+                                                data-target="{% url 'store:cart_add' pk=item.pk %}">Add to cart</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     {% endfor %}
     {% for contact in page_obj %}
-    {# Each "contact" is a Contact model object. #}
-    {{ contact.full_name|upper }}<br>
-{% endfor %}
+        {# Each "contact" is a Contact model object. #}
+        {{ contact.full_name|upper }}<br>
+    {% endfor %}
     <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}
@@ -52,6 +56,26 @@
             <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
         {% endif %}
     </span>
-</div>
-{% endblock %}
+    </div>
 
+{% endblock %}
+{% block page_body_end %}
+
+    <script type="text/javascript">
+        $('.cart-add-btn').click(function (e) {
+            e.preventDefault();
+            let target = $(this).attr('data-target');
+            console.log(target);
+            $.get(target, function (data) {
+                let item_count = Object.keys(data.items).length;
+                var sum = 0;
+                for (const [k, v] of Object.entries(data.items)) {
+                    sum += v
+                }
+                $('#cart-count').html(data.total_items_count);
+            });
+            return false;
+        });
+    </script>
+
+{% endblock %}

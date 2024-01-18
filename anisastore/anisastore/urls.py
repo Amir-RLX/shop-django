@@ -18,12 +18,16 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic import RedirectView
+from django.urls import reverse_lazy
 
 urlpatterns = [
+    path('', RedirectView.as_view(url=reverse_lazy('store:product-list'))),
     path('admin/', admin.site.urls),
     path('store/', include('store.urls', namespace='store')),
     path('account/', include('account.urls')),
     path('account/', include('django.contrib.auth.urls')),
+    path('api-auth/', include('rest_framework.urls'))
 
 ]
 if settings.DEBUG:
